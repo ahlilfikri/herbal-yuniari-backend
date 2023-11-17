@@ -25,27 +25,29 @@ module.exports = {
   post: async (req, res) => {
     upload(req, res, async (error) => {
       if (error instanceof multer.MulterError) {
-        console.log(error.message);
-        response(500, error, 'internal server error \n gagal menambahkan gambar 1`', res);
+        response(500, error, 'internal server error \n gagal menambahkan gambar 1', res);
       } else if (error) {
-        console.log(error.message);
         response(500, error, 'internal server error \n gagal menambahkan gambar 2', res);
       } else {
-        console.log(req.file)
         try {
           const { title, content } = req.body;
           const image = req.file.filename;
-          console.log("ini image",image);
+
+          // Split content into an array of strings based on newline character
+          const contentArray = content.split('\n');
+
+          console.log("ini image", image);
 
           const newProdukBundling = new produkBundlingModel({
             title,
-            content,
+            content: contentArray,
             image,
           });
+
           await newProdukBundling.save();
           response(201, newProdukBundling, 'data berhasil di tambahkan', res);
         } catch (error) {
-          console.log("error",error.message,error);
+          console.log("error", error.message, error);
           response(500, error, 'internal server error \n gagal menambahkan data', res);
         }
       }
@@ -61,12 +63,14 @@ module.exports = {
       } else {
         try {
           const { title, content } = req.body;
-          let update = { title, content };;
+          let update = { title, content };
+
+          const contentArray = content.split('\n');
 
           if (req.file) {
               update = {
                 title,
-                content,
+                content : contentArray,
                 image: req.file.filename 
               };
           } 

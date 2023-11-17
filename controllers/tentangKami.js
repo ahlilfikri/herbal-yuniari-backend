@@ -24,9 +24,10 @@ module.exports = {
     try {
         const { visi, misi, tentang} = req.body;
 
+        const misiArray = misi.split('\n');
         const newAbout = new tentangKamiModel({
         visi,
-        misi,
+        misi : misiArray,
         tentang,
         });
         await newAbout.save();
@@ -40,7 +41,8 @@ module.exports = {
     const id = req.params._id;
     try {
         const { visi, misi, tentang } = req.body;
-        let update = { visi : visi, misi : misi, tentang : tentang };
+        const misiArray = misi.split('\n');
+        let update = { visi : visi, misi : misiArray, tentang : tentang };
         
         const updatedAbout = await tentangKamiModel.findByIdAndUpdate( id, update, { new: true } );
         console.log(updatedAbout);
