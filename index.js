@@ -10,6 +10,23 @@ app.use('/assets',express.static('assets'));
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
+app.post('/sendWhatsAppMessage', async (req, res) => {
+    try {
+      const response = await axios.post(
+        'https://api.whatsapp.com/send',
+        {
+          phone: '6288210335073',
+          text: 'Hello, this is a test message!',
+        }
+      );
+  
+      res.json(response.data);
+    } catch (error) {
+      console.error('Error sending WhatsApp message:', error.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
 // database connection
 mongoose.connect('mongodb+srv://ahlilfikri49:ahlilfikri49@cluster1.vlt2t0t.mongodb.net/?retryWrites=true&w=majority')
 // database connection
